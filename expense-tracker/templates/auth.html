@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+{% set signup = (mode == 'signup') %}
+
+{% block title %}{{ 'Create account' if signup else 'Log in' }} – Daily Expense Tracker{% endblock %}
+{% block body_class %}auth{% endblock %}
+
+{% block body %}
+<div class="card auth-card">
+  <h1>💰 Daily Expense Tracker</h1>
+  <p class="lede">{{ 'Create your account to save your expenses.' if signup else 'Log in to see your saved expenses.' }}</p>
+
+  {% if error %}<div class="alert" role="alert">{{ error }}</div>{% endif %}
+
+  <form method="post">
+    <input type="hidden" name="csrf" value="{{ csrf_token() }}">
+
+    <label for="username">Username</label>
+    <input id="username" name="username" required minlength="3" maxlength="30" autocomplete="username" autofocus>
+
+    <label for="password">Password</label>
+    <input id="password" name="password" type="password" required
+           minlength="{{ 8 if signup else 1 }}"
+           autocomplete="{{ 'new-password' if signup else 'current-password' }}">
+
+    {% if signup %}
+    <label for="confirm">Confirm password</label>
+    <input id="confirm" name="confirm" type="password" required minlength="8" autocomplete="new-password">
+    {% endif %}
+
+    <button class="btn" type="submit">{{ 'Create account' if signup else 'Log in' }}</button>
+  </form>
+
+  <p class="alt">
+    {% if signup %}Already have an account? <a href="{{ url_for('login') }}">Log in</a>
+    {% else %}New here? <a href="{{ url_for('signup') }}">Create an account</a>{% endif %}
+  </p>
+</div>
+{% endblock %}

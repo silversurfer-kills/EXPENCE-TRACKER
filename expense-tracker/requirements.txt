@@ -1,0 +1,3 @@
+Flask>=3.0
+# gunicorn is only for hosting on Linux (Render, Railway, ...); it is skipped on Windows
+gunicorn>=22.0; sys_platform != "win32"

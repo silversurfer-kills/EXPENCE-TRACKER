@@ -1,0 +1,70 @@
+{% extends "tracker.html" %}
+
+{% block title %}Savings &amp; Goals - Daily Expense Tracker{% endblock %}
+{% block heading %}🐷 Savings &amp; Goals{% endblock %}
+{% block lede %}Set savings goals, put aside what is left of your daily limit, and watch your savings grow.{% endblock %}
+
+{% block left %}
+<section class="card area-form">
+  <h2>Add to savings</h2>
+  <div id="saveTip" class="tip"></div>
+  <button class="btn" id="saveSuggest" type="button" hidden></button>
+  <form id="savingForm">
+    <label for="date">Date</label>
+    <input type="date" id="date" required>
+    <label for="amount">Amount (₹)</label>
+    <input type="number" id="amount" min="0.01" step="0.01" placeholder="0.00" required>
+    <label for="note">Note (optional)</label>
+    <input type="text" id="note" maxlength="60" placeholder="e.g. birthday money">
+    <div class="err" id="err" role="alert"></div>
+    <button class="btn" type="submit">Add to savings</button>
+  </form>
+</section>
+
+<section class="card area-extra">
+  <h2>Savings goals</h2>
+  <div class="row">
+    <div><label for="goalDay">Daily goal (₹)</label><input type="number" id="goalDay" min="0" step="10" placeholder="e.g. 100"></div>
+    <div><label for="goalMonth">Monthly goal (₹)</label><input type="number" id="goalMonth" min="0" step="100" placeholder="e.g. 3000"></div>
+  </div>
+  <div class="goal">
+    <div class="goal-line"><span>Today</span><b id="dayTxt"></b></div>
+    <div class="bar"><div class="bar-fill" id="dayBar"></div></div>
+  </div>
+  <div class="goal">
+    <div class="goal-line"><span id="monLbl">This month</span><b id="monTxt"></b></div>
+    <div class="bar"><div class="bar-fill" id="monBar"></div></div>
+  </div>
+</section>
+{% endblock %}
+
+{% block right %}
+<section class="card area-summary">
+  <div class="stats">
+    <div class="stat"><small>Total saved</small><b id="total">₹0</b></div>
+    <div class="stat"><small>Entries</small><b id="count">0</b></div>
+    <div class="stat"><small>Biggest</small><b id="top">–</b></div>
+  </div>
+  <h2>By month</h2>
+  <div id="breakdown"></div>
+</section>
+
+<section class="card area-list">
+  <div class="tools">
+    <div><label for="month">Show month</label><input type="month" id="month"></div>
+    <div><label for="q">Search</label><input type="text" id="q" placeholder="note"></div>
+    <button class="link" id="allMonths" type="button">Show all months</button>
+  </div>
+  <div class="scroll">
+    <table>
+      <thead><tr><th>Date</th><th>Note</th><th class="amt">Amount</th><th></th></tr></thead>
+      <tbody id="rows"></tbody>
+    </table>
+  </div>
+  <div class="empty" id="empty">No savings yet. Add your first one!</div>
+</section>
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='savings.js') }}"></script>
+{% endblock %}

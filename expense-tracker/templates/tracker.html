@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+{#
+  Shared layout of the two tracker pages (header, who-bar, tabs, two columns, scripts).
+  A page fills in: title, wrap_class, heading, lede, left, right, extras, scripts.
+  On small screens the two columns just stack: left first, then right.
+#}
+
+{% block body %}
+<div class="wrap {% block wrap_class %}{% endblock %}">
+  <h1>{% block heading %}{% endblock %}</h1>
+  <p class="lede">{% block lede %}{% endblock %}</p>
+
+  <div class="who">
+    Signed in as <b>{{ username }}</b> &nbsp;·&nbsp;
+    <span id="saveStat" role="status">Loaded ✓</span> &nbsp;·&nbsp;
+    <form method="post" action="{{ url_for('logout') }}" class="inline">
+      <input type="hidden" name="csrf" value="{{ csrf_token() }}">
+      <button type="submit" class="link">Log out</button>
+    </form>
+  </div>
+
+  <nav class="tabs" aria-label="Pages">
+    <a class="tab{{ ' on' if request.endpoint == 'index' }}" href="{{ url_for('index') }}"{{ ' aria-current="page"'|safe if request.endpoint == 'index' }}>🧾 Expenses</a>
+    <a class="tab{{ ' on' if request.endpoint == 'savings' }}" href="{{ url_for('savings') }}"{{ ' aria-current="page"'|safe if request.endpoint == 'savings' }}>🐷 Savings &amp; Goals</a>
+  </nav>
+
+  <main class="layout">
+    <div class="col">{% block left %}{% endblock %}</div>
+    <div class="col">{% block right %}{% endblock %}</div>
+  </main>
+
+  <p class="foot">Your data is saved to your account, so it is there on any device you log in from.</p>
+</div>
+
+{% block extras %}{% endblock %}
+
+{# the saved data, handed to the page's JavaScript #}
+<script type="application/json" id="initial-state">{{ data|tojson }}</script>
+<script src="{{ url_for('static', filename='common.js') }}"></script>
+{% block scripts %}{% endblock %}
+{% endblock %}

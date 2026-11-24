@@ -1,0 +1,89 @@
+{% extends "tracker.html" %}
+
+{% block title %}Daily Expense Tracker{% endblock %}
+{% block wrap_class %}has-fab{% endblock %}
+{% block heading %}💰 Daily Expense Tracker{% endblock %}
+{% block lede %}Steer your spending, one rupee at a time. Log every expense, spot where the money flows, and stay on course with your monthly budget.{% endblock %}
+
+{% block left %}
+<section class="card area-form">
+  <h2>Add an expense</h2>
+  <form id="expenseForm">
+    <label for="date">Date</label>
+    <input type="date" id="date" required>
+    <div class="row">
+      <div>
+        <label for="amount">Amount (₹)</label>
+        <input type="number" id="amount" min="0.01" step="0.01" placeholder="0.00" required>
+      </div>
+      <div>
+        <label for="cat">Category</label>
+        <select id="cat">
+          {% for c in ['Food', 'Travel', 'Shopping', 'Bills', 'Health', 'Entertainment', 'Other'] %}
+          <option>{{ c }}</option>
+          {% endfor %}
+        </select>
+      </div>
+    </div>
+    <label for="note">Note (optional)</label>
+    <input type="text" id="note" maxlength="60" placeholder="e.g. lunch with friends">
+    <div class="err" id="err" role="alert"></div>
+    <button class="btn" type="submit">Add expense</button>
+  </form>
+</section>
+
+<section class="card area-extra">
+  <h2>Monthly budget</h2>
+  <label for="budget">Budget for the selected month (₹)</label>
+  <input type="number" id="budget" min="0" step="100" placeholder="e.g. 5000">
+  <div id="budgetMsg" class="budget-msg"></div>
+  <div class="bar"><div class="bar-fill" id="budgetBar"></div></div>
+</section>
+{% endblock %}
+
+{% block right %}
+<section class="card area-summary">
+  <div class="stats">
+    <div class="stat"><small>Total</small><b id="total">₹0</b></div>
+    <div class="stat"><small>Entries</small><b id="count">0</b></div>
+    <div class="stat"><small>Top category</small><b id="top">–</b></div>
+  </div>
+  <h2>By category</h2>
+  <div id="breakdown"></div>
+</section>
+
+<section class="card area-list">
+  <div class="tools">
+    <div><label for="month">Show month</label><input type="month" id="month"></div>
+    <div><label for="q">Search</label><input type="text" id="q" placeholder="category or note"></div>
+    <button class="link" id="allMonths" type="button">Show all months</button>
+  </div>
+  <div class="scroll">
+    <table>
+      <thead><tr><th>Date</th><th>Category</th><th>Note</th><th class="amt">Amount</th><th></th></tr></thead>
+      <tbody id="rows"></tbody>
+    </table>
+  </div>
+  <div class="empty" id="empty">No expenses yet. Add your first one!</div>
+</section>
+{% endblock %}
+
+{% block extras %}
+<button id="calcBtn" class="fab" type="button" aria-label="Open calculator" aria-expanded="false" aria-controls="calc">
+  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="2" width="16" height="20" rx="2.5"/><rect x="7" y="5" width="10" height="4" rx="1"/><path d="M8 13h.01M12 13h.01M16 13h.01M8 17h.01M12 17h.01M16 17h.01"/></svg>
+  Calculator
+</button>
+
+<div id="calc" class="calc" hidden>
+  <div class="calc-head"><b>Calculator</b><button class="link" id="calcClose" type="button" aria-label="Close calculator">✕</button></div>
+  <input id="calcIn" class="calc-in" inputmode="none" autocomplete="off" placeholder="0" aria-label="Calculation">
+  <div class="calc-out" id="calcOut">&nbsp;</div>
+  <div class="keys" id="keys"></div>
+  <button class="btn" id="useAmt" type="button">Use result as amount</button>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='expenses.js') }}"></script>
+<script src="{{ url_for('static', filename='calculator.js') }}"></script>
+{% endblock %}
